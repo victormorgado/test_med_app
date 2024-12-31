@@ -36,13 +36,13 @@ const Navbar = () => {
 
         <ul className="nav__links active">
           <li className="link">
-            <a href="/landing-page">Home</a>
+            <a href="/">Home</a>
           </li>
           <li className="link">
-            <a href="#">Appointments</a>
+            <a href="/">Appointments</a>
           </li>
           <li className="link">
-            <a href="/sign-up" style={{ margin: '0px' }}>
+            <a href="/signup" style={{ margin: '0px' }}>
               <button className="btn1">Sign Up</button>
             </a>
           </li>
