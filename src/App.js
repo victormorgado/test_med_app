@@ -6,6 +6,7 @@ import Navbar from './Components/Navbar/Navbar';
 import LandingPage from './Components/Landing_Page/Landing_Page';
 import SignUp from './Components/Sign_Up/Sign_Up';
 import Login from './Components/Login/Login';
+import InstantConsultation from './Components/InstantConsultationBooking/InstantConsultation';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/" element={<LandingPage />}/>
             <Route path="/signup" element={<SignUp setIsLoggedIn={setIsLoggedIn}/>}/>
             <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn}/>}/>
+            <Route path="/instant-consultation" element={<InstantConsultation />} />
           </Routes>
         </BrowserRouter>
       </>
