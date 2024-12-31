@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './Login.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { API_URL } from '../../config';
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => {
     const [formValues, setFormValues] = useState({
         email: "",
         password: "",
       });
     
       const [errors, setErrors] = useState({});
+      const navigate = useNavigate();
+
+      // Check if user is already authenticated, then redirect to home page
+        useEffect(() => {
+            if (sessionStorage.getItem("auth-token")) {
+            navigate("/");
+            }
+        }, []);
     
       // Handle input change
       const handleChange = (e) => {
@@ -33,6 +43,43 @@ const Login = () => {
         setErrors(validationErrors);
         return Object.keys(validationErrors).length === 0; // Returns true if no errors
       };
+
+      // Function to handle submission
+    const login = async (e) => {
+        e.preventDefault();
+        // Send a POST request to the login API endpoint
+        const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: formValues.email,
+            password: formValues.password,
+        }),
+        });
+        // Parse the response JSON
+        const json = await res.json();
+        if (json.authtoken) {
+            console.log('Log in!');
+            setIsLoggedIn(true); // Set login state
+            // If authentication token is received, store it in session storage
+            sessionStorage.setItem('auth-token', json.authtoken);
+            sessionStorage.setItem('email', formValues.email);
+            // Redirect to home page and reload the window
+            navigate('/');
+            window.location.reload();
+        } else {
+        // Handle errors if authentication fails
+        if (json.errors) {
+            for (const error of json.errors) {
+            alert(error.msg);
+            }
+        } else {
+            alert(json.error);
+        }
+        }
+    };
     
       // Handle form submission
       const handleSubmit = (e) => {
@@ -40,6 +87,7 @@ const Login = () => {
         if (validateForm()) {
           console.log("Form submitted successfully:", formValues);
           // Add logic to send form data to the backend
+          login(e);
         }
       };
 
@@ -55,7 +103,7 @@ const Login = () => {
             </div>
             <br />
             <div className="login-form">
-                <form onSubmit={handleSubmit}>
+                <form method="POST" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" className="form-control" value={formValues.email} onChange={handleChange} placeholder="Enter your email" aria-describedby="helpId" />
