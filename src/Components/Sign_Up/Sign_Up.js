@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import './Sign_Up.css';
+import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../../config';
 
-const SignUp = () => {
+const SignUp = ({ setIsLoggedIn }) => {
     const [formValues, setFormValues] = useState({
         name: "",
         phone: "",
@@ -11,6 +13,7 @@ const SignUp = () => {
       });
     
       const [errors, setErrors] = useState({});
+      const navigate = useNavigate(); // Navigation hook from react-router
     
       // Handle input change
       const handleChange = (e) => {
@@ -47,13 +50,53 @@ const SignUp = () => {
         setErrors(validationErrors);
         return Object.keys(validationErrors).length === 0; // Returns true if no errors
       };
-    
+      
+      // Function to handle form submission
+    const register = async (e) => {
+        e.preventDefault(); // Prevent default form submission
+        // API Call to register user
+        const response = await fetch(`${API_URL}/api/auth/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: formValues.name,
+                email: formValues.email,
+                password: formValues.password,
+                phone: formValues.phone,
+            }),
+        });
+        const json = await response.json(); // Parse the response JSON
+        if (json.authtoken) {
+            console.log('Log in!');
+            setIsLoggedIn(true); // Set login state
+            // Store user data in session storage
+            sessionStorage.setItem("auth-token", json.authtoken);
+            sessionStorage.setItem("name", formValues.name);
+            sessionStorage.setItem("phone", formValues.phone);
+            sessionStorage.setItem("email", formValues.email);
+            // Redirect user to home page
+            navigate("/");
+            window.location.reload(); // Refresh the page
+        } else {
+            if (json.errors) {
+                for (const error of json.errors) {
+                    setErrors(error.msg); // Show error messages
+                }
+            } else {
+                setErrors(json.error);
+            }
+        }
+    };
+
       // Handle form submission
       const handleSubmit = (e) => {
         e.preventDefault();
         if (validateForm()) {
           console.log("Form submitted successfully:", formValues);
           // Add logic to send form data to the backend
+          register(e);
         }
       };
 
@@ -69,7 +112,7 @@ const SignUp = () => {
                     Already a member? <span><a href="../Login/Login.html" style={{color: '#2190FF'}}> Login</a></span>
                 </div>
                 <div className="signup-form"> 
-                    <form onSubmit={handleSubmit}>  
+                    <form method="POST" onSubmit={handleSubmit}>  
                         <div className="form-group"> 
                             <label for="role">Role</label>
                             <select id="role" name="role" required value={formValues.role} onChange={handleChange} className="form-control" aria-describedby="helpId">

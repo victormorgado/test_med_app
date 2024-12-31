@@ -1,10 +1,41 @@
-import React from "react"; // Importing the necessary modules from React library
+import React, { useEffect, useState } from "react"; // Importing the necessary modules from React library
 import './Navbar.css';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
+    const [userName, setUserName] = useState(null);
+    const navigate = useNavigate();
+    //setIsLoggedIn(true);
+
+    useEffect(() => {
+        //sessionStorage.setItem("email", "victor@email.com");
+
+        console.log(isLoggedIn);
+        if (isLoggedIn) {
+          // Retrieve email from sessionStorage and extract the name
+          const email = sessionStorage.getItem("email");
+          console.log(email);
+          if (email) {
+            const name = email.split('@')[0]; // Extract the portion before '@'
+            setUserName(name);
+          }
+        } else {
+          setUserName(null); // Clear the name on logout
+        }
+      }, [isLoggedIn]);
+
     const handleClick = () => {
         console.log('Navbar icon clicked!');
-        };
+    };
+    const handleLogout = () => {
+        console.log('Log out!');
+        setIsLoggedIn(false); // Log out the user
+        sessionStorage.removeItem("auth-token"); // Clear from sessionStorage
+        sessionStorage.removeItem("name"); // Clear from sessionStorage
+        sessionStorage.removeItem("phone"); // Clear from sessionStorage
+        sessionStorage.removeItem("email"); // Clear from sessionStorage
+        navigate('/'); // Redirect to the homepage
+    };
   return (
     <>
     <nav>
@@ -41,16 +72,33 @@ const Navbar = () => {
           <li className="link">
             <a href="/">Appointments</a>
           </li>
-          <li className="link">
-            <a href="/signup" style={{ margin: '0px' }}>
-              <button className="btn1">Sign Up</button>
-            </a>
-          </li>
-          <li className="link">
-            <a href="/login" style={{ margin: '0rem 1rem 0rem -0.5rem' }}>
-              <button className="btn1">Login</button>
-            </a>
-          </li>
+          {isLoggedIn ? (
+            <>
+            <li className="link">
+                    <p style={{ margin: '0px' }}>
+                        Welcome, {userName}
+                    </p>
+                </li>
+            <li className="link">
+                <a href="/login" onClick={handleLogout} style={{ margin: '0rem 1rem 0rem -0.5rem' }}>
+                <button className="btn1">Logout</button>
+                </a>
+            </li>
+            </>
+            ) : (
+            <>
+                <li className="link">
+                    <a href="/signup" style={{ margin: '0px' }}>
+                    <button className="btn1">Sign Up</button>
+                    </a>
+                </li>
+                <li className="link">
+                    <a href="/login" style={{ margin: '0rem 1rem 0rem -0.5rem' }}>
+                    <button className="btn1">Login</button>
+                    </a>
+                </li>
+            </>
+            )}
         </ul>
       </nav>
     </>
