@@ -70,7 +70,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             <a href="/">Home</a>
           </li>
           <li className="link">
-            <a href="/instant-consultation">Appointments</a>
+            <a href="/booking-consultation">Appointments</a>
           </li>
           {isLoggedIn ? (
             <>
