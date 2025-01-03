@@ -5,10 +5,10 @@ const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [date, setDate] = useState('');
     const [selectedSlot, setSelectedSlot] = useState(null);
-  
+  /*
     const handleSlotSelection = (slot) => {
       setSelectedSlot(slot);
-    };
+    };*/
   
     const handleFormSubmit = (e) => {
       e.preventDefault();
@@ -42,9 +42,9 @@ const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
         <div className="form-group">
           <label htmlFor="name">Date of Appointment:</label>
           <select name="cars" id="time" value={selectedSlot} onChange={(e) => setSelectedSlot(e.target.value)} required>
-                <option value="morning">10 AM</option>
-                <option value="noon">12 AM</option>
-                <option value="evening">6 PM</option>
+                <option value="10 AM">10 AM</option>
+                <option value="12 PM">12 PM</option>
+                <option value="6 PM">6 PM</option>
             </select>
         </div>
         <button type="submit">Book Now</button>

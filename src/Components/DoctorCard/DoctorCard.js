@@ -10,6 +10,15 @@ const DoctorCard = ({ name, speciality, experience, ratings, profilePic }) => {
   const [showModal, setShowModal] = useState(false);
   const [appointments, setAppointments] = useState([]);
 
+  useEffect(() => {
+    const storedAppointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    setAppointments(storedAppointments);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+  }, [appointments]);
+
   const handleBooking = () => {
     setShowModal(true);
   };

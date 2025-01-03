@@ -21,7 +21,7 @@ const BookingConsultation = () => {
                 setFilteredDoctors(filtered);
                 
                 setIsSearched(true);
-                window.reload()
+                //window.location.reload();
             } else {
                 setFilteredDoctors([]);
                 setIsSearched(false);

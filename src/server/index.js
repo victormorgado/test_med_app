@@ -10,10 +10,17 @@ app.use(express.static('public'))
 
 const PORT = process.env.PORT || 8181;
 
+const corsOptions = {
+  origin: 'https://victormorgad-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai',
+  methods: 'GET,POST,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true,
+};
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+//app.use(cors());
+app.use(cors(corsOptions));
 
 // Connect to MongoDB
 connectToMongo();

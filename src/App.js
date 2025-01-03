@@ -8,6 +8,7 @@ import SignUp from './Components/Sign_Up/Sign_Up';
 import Login from './Components/Login/Login';
 //import InstantConsultation from './Components/InstantConsultationBooking/InstantConsultation';
 import BookingConsultation from "./Components/BookingConsultation";
+import Notification from "./Components/Notification/Notification";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,6 +27,7 @@ function App() {
         <BrowserRouter>
           {/* Display the Navbar component */}
           <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
+          <Notification>
           {/* Set up the Routes for different pages */}
           <Routes>
             {/* Define individual Route components for different pages */}
@@ -34,6 +36,7 @@ function App() {
             <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn}/>}/>
             <Route path="/booking-consultation" element={<BookingConsultation />} />
           </Routes>
+          </Notification>
         </BrowserRouter>
       </>
     </div>
