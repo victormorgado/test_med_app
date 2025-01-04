@@ -1,0 +1,48 @@
+.report-form-container{
+    max-width: 900px; /* Maximum width of the container */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 40px; /* Padding inside the container */
+    margin-top: 10%; /* Top margin of 10% */
+}
+
+.reports-text {
+    margin-top: 30px; 
+    text-align: left;
+}
+
+.report-form-table{
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 10px;
+    background-color: #ebf5fd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.report-form-table-header{
+    background-color: #00C9B1;
+    height: 40px;
+    padding: 5px;
+    color: #fff;
+    text-decoration: solid;
+}
+
+.report-form-table-row{
+    border: #00C9B1;
+    border-style: solid;
+    border-width: 0px 0px 4px 0px;
+}
+
+.report-form-table-btn{
+    padding: 5px 10px; /* Padding inside buttons */
+    font-size: 16px; /* Font size of buttons */
+    border: none; /* No border for buttons */
+    border-radius: 4px; /* Border radius for rounded corners on buttons */
+    cursor: pointer; /* Cursor style on hover for buttons */
+    background-color: #00C9B1; /* Background color for primary buttons */
+    color: #fff; /* Text color for primary buttons */
+    width: 90%;
+}
+  
+  
+  

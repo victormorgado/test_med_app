@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"; // Importing the necessary modules from React library
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
+import ProfileCard from "../ProfileCard/ProfileCard";
 
 const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     const [userName, setUserName] = useState(null);
@@ -78,9 +79,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
           {isLoggedIn ? (
             <>
             <li className="link">
-                    <p style={{ margin: '0px' }}>
-                        Welcome, {userName}
-                    </p>
+                    <ProfileCard userName={userName}/>
                 </li>
             <li className="link">
                 <a href="/login" onClick={handleLogout} style={{ margin: '0rem 1rem 0rem -0.5rem' }}>
