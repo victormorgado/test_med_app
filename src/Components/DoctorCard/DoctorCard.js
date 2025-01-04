@@ -9,14 +9,18 @@ import { v4 as uuidv4 } from 'uuid';
 const DoctorCard = ({ name, speciality, experience, ratings, profilePic }) => {
   const [showModal, setShowModal] = useState(false);
   const [appointments, setAppointments] = useState([]);
+  const [doctorData, setDoctorData] = useState([]);
 
   useEffect(() => {
     const storedAppointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    const storedDoctors = JSON.parse(localStorage.getItem('doctorData')) || [];
+    setDoctorData(storedDoctors)
     setAppointments(storedAppointments);
   }, []);
 
   useEffect(() => {
     localStorage.setItem('appointments', JSON.stringify(appointments));
+    localStorage.setItem('doctorData', JSON.stringify(doctorData));
   }, [appointments]);
 
   const handleBooking = () => {
@@ -33,6 +37,22 @@ const DoctorCard = ({ name, speciality, experience, ratings, profilePic }) => {
       id: uuidv4(),
       ...appointmentData,
     };
+
+    // Check if any doctor in doctorData matches the appointmentData's doctorName
+    const doctorExists = doctorData.some(
+        (doctor) => doctor.name === appointmentData.doctorName
+      );
+    // If no matching doctor is found, create a new doctor object
+    if (!doctorExists) {
+        const newDoctor = {
+            id: uuidv4(),
+            name: appointmentData.doctorName,
+            speciality: appointmentData.doctorSpeciality,
+        };
+        const updatedDoctors = [...doctorData, newDoctor];
+        setDoctorData(updatedDoctors);
+    }
+
     const updatedAppointments = [...appointments, newAppointment];
     setAppointments(updatedAppointments);
     setShowModal(false);

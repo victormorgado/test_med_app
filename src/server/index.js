@@ -11,16 +11,17 @@ app.use(express.static('public'))
 const PORT = process.env.PORT || 8181;
 
 const corsOptions = {
-  origin: 'https://victormorgad-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai',
+  origin: 'https://victormorgad-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/',
   methods: 'GET,POST,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization',
   credentials: true,
 };
 
 // Middleware
+app.options('*', cors(corsOptions)); // Enable preflight for all routes
 app.use(express.json());
 //app.use(cors());
-app.use(cors(corsOptions));
+
 
 // Connect to MongoDB
 connectToMongo();
@@ -31,8 +32,6 @@ app.use('/api/auth', require('./routes/auth'));
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
-
-
 
   // Start the server
 app.listen(PORT, () => {

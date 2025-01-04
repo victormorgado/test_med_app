@@ -14,6 +14,7 @@ const Notification = ({ children }) => {
 
   // useEffect hook to perform side effects in the component
   useEffect(() => {
+    /*
     //generate generic data for testing
     // Doctor data
     const doctorDataFake = {
@@ -27,17 +28,40 @@ const Notification = ({ children }) => {
         name: "Jane Smith",
         date: "2025-01-10",
         selectedSlot: "10:00 AM"
-    };
-    // Store doctor data
-    localStorage.setItem('doctorData', JSON.stringify(doctorDataFake));
-
-    // Store appointment data using the doctor's name as the key
-    localStorage.setItem(doctorDataFake.name, JSON.stringify(appointmentDataFake));
+    };*/
 
     // Retrieve stored username, doctor data, and appointment data from sessionStorage and localStorage
-    const storedUsername = sessionStorage.getItem('email');
-    const storedDoctorData = JSON.parse(localStorage.getItem('doctorData'));
-    const storedAppointmentData = JSON.parse(localStorage.getItem(storedDoctorData?.name));
+    const localAppointments = localStorage.getItem('appointments');
+    const localDoctors = localStorage.getItem('doctorData');
+    let storedUsername = '';
+    let storedDoctorData = null;
+    let storedAppointmentData = null;
+
+    if (localAppointments !== null && localDoctors !== null) {
+        const storedAppointments = JSON.parse(localAppointments);
+        if(storedAppointments.length > 1)
+            storedAppointmentData = findClosestAppointment(storedAppointments);
+        else
+            storedAppointmentData = storedAppointments[0];
+        storedUsername = sessionStorage.getItem('email');
+
+        const totalDoctors = JSON.parse(localDoctors);
+
+        //search closest appointment's doctor data
+        console.log(storedAppointments);
+        console.log(storedAppointmentData);
+        // Find the doctor object that matches the doctor's name in storedAppointmentData
+        const matchingDoctor = totalDoctors.find(
+            (doctor) => doctor.name === storedAppointmentData.doctorName
+        );
+        // If a matching doctor is found, assign it to storedDoctorData
+        if (matchingDoctor) {
+            storedDoctorData = matchingDoctor;
+        } else {
+            // Handle the case where no matching doctor is found, if necessary
+            console.log('No matching doctor found.');
+        }
+      }
 
     // Set isLoggedIn state to true and update username if storedUsername exists
     if (storedUsername) {
@@ -52,7 +76,6 @@ const Notification = ({ children }) => {
 
     // Set appointmentData state if storedAppointmentData exists
     if (storedAppointmentData) {
-        console.log(appointmentData);
       setAppointmentData(storedAppointmentData);
       setShowNotification(true);
     }
@@ -60,6 +83,31 @@ const Notification = ({ children }) => {
         console.log("NO appointmentData");
     }
   }, []); // Empty dependency array ensures useEffect runs only once after initial render
+
+    // Function to find the appointment with the date closest to today and earliest time
+    function findClosestAppointment(appointments) {
+        const now = new Date();
+        let closestAppointment = null;
+        let smallestDifference = Infinity;
+    
+        appointments.forEach(appointment => {
+        // Combine date and time into a single Date object
+        const [month, day, year] = appointment.date.split('/');
+        const appointmentDateTime = new Date(`${year}-${month}-${day} ${appointment.selectedSlot}`);
+        const timeDifference = Math.abs(appointmentDateTime - now);
+    
+        // Check if this appointment is closer, or if it's a tie with an earlier time
+        if (
+            timeDifference < smallestDifference ||
+            (timeDifference === smallestDifference && appointmentDateTime < new Date(`${closestAppointment.date} ${closestAppointment.selectedSlot}`))
+        ) {
+            smallestDifference = timeDifference;
+            closestAppointment = appointment;
+        }
+        });
+    
+        return closestAppointment;
+    }
 
   // Function to handle appointment cancellation
   const handleCancelAppointment = () => {
@@ -76,7 +124,7 @@ const Notification = ({ children }) => {
       {/* Render children components */}
       {children}
       {/* Display appointment details if user is logged in and appointmentData is available */}
-      {appointmentData && (
+      {doctorData && appointmentData && (
         <>
           <div className="appointment-card">
             <div className="appointment-card__content">
