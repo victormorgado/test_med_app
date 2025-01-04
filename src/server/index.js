@@ -1,27 +1,14 @@
 const express = require('express');
 const cors = require('cors');
-const http = require('http');
 const connectToMongo = require('./db');
 const app = express();
-
-
-app.set('view engine','ejs')
-app.use(express.static('public'))
-
+const path = require('path');
 const PORT = process.env.PORT || 8181;
 
-const corsOptions = {
-  origin: 'https://victormorgad-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/',
-  methods: 'GET,POST,OPTIONS',
-  allowedHeaders: 'Content-Type,Authorization',
-  credentials: true,
-};
 
 // Middleware
-app.options('*', cors(corsOptions)); // Enable preflight for all routes
 app.use(express.json());
-//app.use(cors());
-
+app.use(cors());
 
 // Connect to MongoDB
 connectToMongo();
@@ -29,6 +16,11 @@ connectToMongo();
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
